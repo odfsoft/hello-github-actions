@@ -15,6 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
+		<application.group>odfsoft</application.group>
 		<application.name>guess-game</application.name>
 		<java.version>11</java.version>
 		<maven.compiler.release>11</maven.compiler.release>
@@ -102,7 +103,7 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<configuration>
 					<to>
-						<image>${project.name}</image>
+						<image>${application.group}/${application.name}</image>
 					</to>
 				</configuration>
 			</plugin>
