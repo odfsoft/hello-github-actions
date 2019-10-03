@@ -8,17 +8,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/docker/login@master
-        with: # Set the secret as an input
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Login in Dockerhub
+        uses: actions/docker/login@master
+        env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWPORD: ${{ secrets.DOCKER_PASSWPORD }}
-        env: # Set the secret in the env
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWPORD: ${{ secrets.DOCKER_PASSWPORD }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test
         run: mvn clean verify -U
       - name: build
         run: ./mvnw compile jib:dockerBuild
-      - name: push
-        run:  docker push odfsoft/guess-game:latest
+      - name: Push the Docker image
+        uses: actions/docker/cli@master
+        with:
+          args: push odfsoft/guess-game:latest
