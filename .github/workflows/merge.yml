@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: actions/docker/login@master
+      - secrets: ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
       - name: Test
-        run: mvn clean verify
+        run: mvn clean verify -U
       - name: build
-        run: ./mvnw compile jib:build
+        run: ./mvnw compile jib:dockerBuild
       - name: push
         run:  docker push odfsoft/guess-game:latest
