@@ -11,11 +11,11 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/docker/login@master
         with: # Set the secret as an input
-          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          GITHUB_PASSWPORD: ${{ secrets.GITHUB_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWPORD: ${{ secrets.DOCKER_PASSWPORD }}
         env: # Set the secret in the env
-          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          GITHUB_PASSWPORD: ${{ secrets.GITHUB_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWPORD: ${{ secrets.DOCKER_PASSWPORD }}
       - name: Test
         run: mvn clean verify -U
       - name: build
