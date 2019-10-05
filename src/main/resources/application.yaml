@@ -1,0 +1,7 @@
+db:
+    hostname: localhost
+    username: root
+    password: secret
+    name: game
+    driver-class-name: org.postgresql.Driver
+    maximum-pool-size: 100

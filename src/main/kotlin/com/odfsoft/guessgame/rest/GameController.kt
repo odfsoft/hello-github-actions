@@ -23,6 +23,9 @@ class GameController(val gameService: GameService) {
     @PostMapping
     fun createGame() = gameService.createGame()
 
+    @GetMapping
+    fun getAllGames() = gameService.getAllGames()
+
     @GetMapping("/{id}")
     fun getGame(@PathVariable("id") gameId: UUID) = gameService.getGame(gameId)
 
