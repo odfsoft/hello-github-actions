@@ -1,0 +1,10 @@
+version: '3'
+services:
+  database:
+    image: "postgres:10.3"
+    environment:
+      - POSTGRES_DB=game
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - "5432:5432"
