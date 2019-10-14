@@ -25,8 +25,16 @@ class GameRepository(private val client: DatabaseClient) {
             .fetch()
             .first()
 
-    fun findAll(): Flux<Game> =
-        client
-            .select().from(Game::class.java).fetch().all()
+    fun findAll(): Flux<Game> {
+        val games = client
+            .select()
+            .from(Game::class.java)
+            .fetch()
+            .all()
+            .onErrorContinue{ throwable, o -> System.out.println("value ignored $throwable $o") }
+        games.subscribe()
+        return Flux.empty()
+    }
+
 
 }

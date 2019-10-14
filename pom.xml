@@ -22,12 +22,15 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<spring-boot.version>2.2.0.RC1</spring-boot.version>
-		<postgres.version>42.2.5</postgres.version>
-		<spring-data-r2dbc.version>1.0.0.RC1</spring-data-r2dbc.version>
-		<postgres-r2dbc.version>0.8.0.RC1</postgres-r2dbc.version>
+		<spring-data-r2dbc.version>1.0.0.BUILD-SNAPSHOT</spring-data-r2dbc.version>
+		<r2dbc-releasetrain.version>Arabba-M8</r2dbc-releasetrain.version>
+
+
 		<db.url>jdbc:postgresql://localhost:5432/game</db.url>
 		<db.user>root</db.user>
 		<db.password>secret</db.password>
+
+
 
 		<kotlin.version>1.3.50</kotlin.version>
 
@@ -65,12 +68,10 @@
 		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-postgresql</artifactId>
-			<version>${postgres-r2dbc.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>${postgres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
@@ -80,11 +81,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>21.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
@@ -385,7 +381,6 @@
 			<url>https://repo.spring.io/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
