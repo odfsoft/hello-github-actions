@@ -1,20 +1,21 @@
 package com.odfsoft.guessgame.rest
 
+import com.odfsoft.guessgame.domain.Game
 import com.odfsoft.guessgame.domain.Guess
 import com.odfsoft.guessgame.service.GameService
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.util.UUID
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ExceptionHandler
-import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/api/game")
@@ -22,6 +23,12 @@ class GameController(val gameService: GameService) {
 
     @PostMapping
     fun createGame() = gameService.createGame()
+
+    @GetMapping
+    fun getAllGames(): Flux<Game> {
+        println("doing something")
+        return gameService.getAllGames()
+    }
 
     @GetMapping("/{id}")
     fun getGame(@PathVariable("id") gameId: UUID) = gameService.getGame(gameId)
