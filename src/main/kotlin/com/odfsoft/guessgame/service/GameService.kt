@@ -17,6 +17,6 @@ class GameService(var repository: GameRepository) {
 
     fun getGame(gameId: UUID): Mono<Game> = repository.findByGameId(gameId)
 
-    fun getAllGames(): Flux<Game> = repository.findAll()
+    fun getAllGames() = repository.findAll()
 
 }

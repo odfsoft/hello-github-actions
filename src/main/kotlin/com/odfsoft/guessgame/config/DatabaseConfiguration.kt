@@ -3,23 +3,35 @@ package com.odfsoft.guessgame.config
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.spi.ConnectionFactory
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration
+import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager
+import org.springframework.transaction.ReactiveTransactionManager
+import org.springframework.transaction.reactive.TransactionalOperator
 
 @Configuration
-class DatabaseConfig(@Value("\${db.hostname}") val host: String,
-                     @Value("\${db.username}") val username: String,
-                     @Value("\${db.password}") val password: String,
-                     @Value("\${db.name}") val name: String) : AbstractR2dbcConfiguration() {
+class PostgresConfig : AbstractR2dbcConfiguration() {
 
-    override fun connectionFactory(): ConnectionFactory =
-        PostgresqlConnectionFactory(
+    @Bean
+    override fun connectionFactory(): ConnectionFactory {
+        return PostgresqlConnectionFactory(
             PostgresqlConnectionConfiguration.builder()
-                .host(host)
-                .database(name)
-                .username(username)
-                .password(password)
-                .build()
-        )
+                .host("localhost")
+                .port(5432)
+                .username("root")
+                .password("secret")
+                .database("game")
+                .build())
+    }
+
+    @Bean
+    fun reactiveTransactionManager(connectionFactory: ConnectionFactory): ReactiveTransactionManager {
+        return R2dbcTransactionManager(connectionFactory)
+    }
+
+    @Bean
+    fun transactionalOperator(reactiveTransactionManager: ReactiveTransactionManager) =
+        TransactionalOperator.create(reactiveTransactionManager)
+
 }

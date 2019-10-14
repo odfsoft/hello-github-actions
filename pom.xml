@@ -23,8 +23,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<spring-boot.version>2.2.0.RC1</spring-boot.version>
 		<spring-data-r2dbc.version>1.0.0.BUILD-SNAPSHOT</spring-data-r2dbc.version>
-		<r2dbc-releasetrain.version>Arabba-M8</r2dbc-releasetrain.version>
-
+		<r2dbc-postgres.version>0.8.0.RC2</r2dbc-postgres.version>
 
 		<db.url>jdbc:postgresql://localhost:5432/game</db.url>
 		<db.user>root</db.user>
@@ -46,6 +45,18 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Add Log4j2 Dependency -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,6 +79,11 @@
 		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-postgresql</artifactId>
+			<version>${r2dbc-postgres.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.r2dbc</groupId>
+			<artifactId>r2dbc-pool</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -101,6 +117,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -386,7 +403,7 @@
 			<dependency>
 				<groupId>io.r2dbc</groupId>
 				<artifactId>r2dbc-bom</artifactId>
-				<version>${r2dbc-releasetrain.version}</version>
+				<version>Arabba-RC2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

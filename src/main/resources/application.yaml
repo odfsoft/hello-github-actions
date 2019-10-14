@@ -1,7 +1,8 @@
-db:
-    hostname: localhost
-    username: root
-    password: secret
-    name: game
-    driver-class-name: org.postgresql.Driver
-    maximum-pool-size: 100
+
+spring:
+    datasource:
+        url: jdbc:postgresql://127.0.0.1:5432/postgres
+        username: root
+        password: secret
+        hostname: localhost
+        name: game
