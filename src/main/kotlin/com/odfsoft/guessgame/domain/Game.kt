@@ -10,9 +10,9 @@ const val TOO_LOW = "your guess is too low"
 const val TOO_HIGH = "your guess is too high"
 const val RIGHT_GUESS = "Congratulations!! You have guessed"
 
-@Table("game")
+@Table
 data class Game(@Id val id: UUID = UUID.randomUUID(),
-                @Column("guess") val guess: Int = Random.nextInt(500)) {
+                val guess: Int = Random.nextInt(500)) {
 
     fun tryGuess(guessNumber: Int) =
         when {

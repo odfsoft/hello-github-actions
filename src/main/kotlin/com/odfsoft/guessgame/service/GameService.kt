@@ -3,12 +3,14 @@ package com.odfsoft.guessgame.service
 import com.odfsoft.guessgame.domain.Game
 import com.odfsoft.guessgame.repository.GameRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.util.UUID
 
+@Transactional
 @Service
-class GameService(var repository: GameRepository) {
+class GameService(private val repository: GameRepository) {
 
     fun createGame(): Mono<Game> {
         val game = Game()

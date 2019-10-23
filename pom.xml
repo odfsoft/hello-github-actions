@@ -24,9 +24,9 @@
 		<spring-boot.version>2.2.0.RC1</spring-boot.version>
 		<!-- r2dbc versions -->
 		<spring-data-r2dbc.version>1.0.0.RC1</spring-data-r2dbc.version>
-		<r2dbc-postgresql.version>1.0.0.M5</r2dbc-postgresql.version>
-		<r2dbc-pool.version>1.0.0.M5</r2dbc-pool.version>
-		<r2dbc-spi.version>1.0.0.M5</r2dbc-spi.version>
+		<r2dbc-postgresql.version>1.0.0.M7</r2dbc-postgresql.version>
+		<r2dbc-pool.version>1.0.0.M7</r2dbc-pool.version>
+		<r2dbc-spi.version>1.0.0.M7</r2dbc-spi.version>
 
 		<db.url>jdbc:postgresql://localhost:5432/game</db.url>
 		<db.user>root</db.user>
@@ -96,11 +96,6 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>21.0</version>
-		</dependency>
 		<!--		added by me-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -108,10 +103,32 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.11.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>1.11.3</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -124,21 +141,24 @@
 				<directory>${basedir}/src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/application*.yml</include>
 					<include>**/application*.yaml</include>
-					<include>**/application*.properties</include>
 				</includes>
 			</resource>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
 				<excludes>
-					<exclude>**/application*.yml</exclude>
 					<exclude>**/application*.yaml</exclude>
-					<exclude>**/application*.properties</exclude>
 				</excludes>
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
@@ -149,45 +169,27 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<url>${db.url}</url>
+					<user>${db.user}</user>
+					<password>${db.password}</password>
+					<schemas>
+						<schema>public</schema>
+					</schemas>
+					<locations>
+						<location>filesystem:/${basedir}/src/main/resources/db/migration</location>
+					</locations>
+				</configuration>
 				<executions>
 					<execution>
-						<id>add-kotlin-source</id>
+						<id>migrate-database</id>
 						<phase>generate-sources</phase>
 						<goals>
-							<goal>add-source</goal>
+							<goal>migrate</goal>
+							<goal>validate</goal>
 						</goals>
-						<configuration>
-							<sources>
-								<source>src/main/kotlin</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>add-kotlin-test-source</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>add-test-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/test/kotlin</source>
-							</sources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>reserve-network-ports</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>reserve-network-port</goal>
-						</goals>
-						<configuration>
-							<portNames>
-								<portName>mockserver.port</portName>
-							</portNames>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -254,104 +256,6 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-			<!-- See: https://kotlinlang.org/docs/reference/using-maven.html#compiling-kotlin-and-java-sources -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<!-- Replacing default-compile as it is treated specially by maven -->
-					<execution>
-						<id>default-compile</id>
-						<phase>none</phase>
-					</execution>
-					<!-- Replacing default-testCompile as it is treated specially by maven -->
-					<execution>
-						<id>default-testCompile</id>
-						<phase>none</phase>
-					</execution>
-					<execution>
-						<id>java-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>java-test-compile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
-				<configuration>
-					<runOrder>alphabetical</runOrder>
-					<excludes>
-						<exclude>**/*IntegrationTest.class</exclude>
-					</excludes>
-					<reportsDirectory>${project.build.directory}/reports/surefire</reportsDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${maven-failsafe-plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<classesDirectory>${project.build.directory}/${project.build.finalName}.jar.original
-					</classesDirectory>
-					<runOrder>alphabetical</runOrder>
-					<includes>
-						<include>**/*IntegrationTest.class</include>
-					</includes>
-					<systemPropertyVariables>
-						<com.amazonaws.sdk.disableCbor>true</com.amazonaws.sdk.disableCbor>
-					</systemPropertyVariables>
-					<systemProperties>
-						<property>
-							<name>mockserver.port</name>
-							<value>${mockserver.port}</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<configuration>
-					<url>${db.url}</url>
-					<user>${db.user}</user>
-					<password>${db.password}</password>
-					<schemas>
-						<schema>public</schema>
-					</schemas>
-					<locations>
-						<location>filesystem:/${basedir}/src/main/resources/db/migration</location>
-					</locations>
-				</configuration>
-				<executions>
-					<execution>
-						<id>migrate-database</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>migrate</goal>
-							<goal>validate</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

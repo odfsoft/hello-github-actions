@@ -1,5 +1,6 @@
 package com.odfsoft.guessgame.rest
 
+import com.odfsoft.guessgame.AbstractIntegrationTest
 import com.odfsoft.guessgame.domain.Guess
 import com.odfsoft.guessgame.domain.RIGHT_GUESS
 import com.odfsoft.guessgame.domain.TOO_LOW
@@ -14,9 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.BodyInserters
 import java.util.UUID
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Tag("integration-test")
-class GameControllerIntegrationTest {
+class GameControllerIntegrationTest: AbstractIntegrationTest() {
 
     @Autowired
     protected lateinit var webTestClient: WebTestClient
